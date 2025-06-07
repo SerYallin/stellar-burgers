@@ -15,14 +15,22 @@ import {
   FeedInfo,
   IngredientDetails,
   Modal,
-  OrderInfo
+  OrderInfo,
+  Wrapper
 } from '@components';
 import { OnlyAuth, OnlyUnAuth } from '../protected-route/protected-route';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import {
+  Route,
+  Routes,
+  useLocation,
+  useMatch,
+  useNavigate
+} from 'react-router-dom';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from '../../services/store';
 import { checkUserAuth, getIngredients, getIsAuthChecked } from '@slices';
 import { Preloader } from '@ui';
+import { OrderNumber } from '../order-number';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -34,6 +42,7 @@ const App = () => {
   }, []);
   const location = useLocation();
   const background = location.state?.background;
+  const match = useMatch('/feed/:number');
   const onClose = () => {
     navigate(-1);
   };
@@ -70,11 +79,29 @@ const App = () => {
             />
             <Route
               path='/profile/orders/:number'
-              element={<OnlyAuth component={<OrderInfo />} />}
+              element={
+                <Wrapper title={<OrderNumber />}>
+                  <OnlyAuth component={<OrderInfo />} />
+                </Wrapper>
+              }
             />
             <Route path='/feed' element={<Feed />} />
-            <Route path='/feed/:number' element={<OrderInfo />} />
-            <Route path='/ingredients/:id' element={<IngredientDetails />} />
+            <Route
+              path='/feed/:number'
+              element={
+                <Wrapper title={<OrderNumber />}>
+                  <OrderInfo />{' '}
+                </Wrapper>
+              }
+            />
+            <Route
+              path='/ingredients/:id'
+              element={
+                <Wrapper title='Детали ингредиента'>
+                  <IngredientDetails />
+                </Wrapper>
+              }
+            />
           </Routes>
           {background && (
             <Routes>
@@ -92,7 +119,7 @@ const App = () => {
                 path='/feed/:number'
                 element={
                   <Modal
-                    title='Детали заказа'
+                    title={<OrderNumber />}
                     onClose={onClose}
                     children={<OrderInfo />}
                   />
@@ -102,7 +129,7 @@ const App = () => {
                 path='/profile/orders/:number'
                 element={
                   <Modal
-                    title='Детали заказа'
+                    title={<OrderNumber />}
                     onClose={onClose}
                     children={<OrderInfo />}
                   />
