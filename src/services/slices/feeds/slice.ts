@@ -32,7 +32,7 @@ export const feedsSlice = createSlice({
         state.isLoaded = true;
       })
       .addCase(getFeeds.rejected, (state, action) => {
-        state.isLoaded = true;
+        state.isLoaded = false;
         state.error = action.error.message;
       })
       .addCase(getFeeds.fulfilled, (state, action) => {
@@ -40,6 +40,7 @@ export const feedsSlice = createSlice({
         state.total = action.payload.total;
         state.totalToday = action.payload.totalToday;
         state.isLoaded = false;
+        state.error = undefined;
       });
   }
 });
