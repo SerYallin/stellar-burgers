@@ -35,3 +35,53 @@
 //     }
 //   }
 // }
+
+import { selectors, tokens } from './constants';
+import Chainable = Cypress.Chainable;
+
+Cypress.Commands.add('initApp', (withAuth?: boolean) => {
+  cy.intercept('GET', 'api/ingredients', { fixture: 'ingredients.json' });
+  if (withAuth) {
+    cy.intercept('GET', 'api/auth/user', { fixture: 'user.json' });
+    cy.intercept('PATCH', 'api/auth/user', { fixture: 'user.json' });
+
+    // Устанавливаем токены для авторизации.
+    window.localStorage.setItem(
+      'refreshToken',
+      JSON.stringify(tokens.refreshToken)
+    );
+    // Устанавливаем куки для авторизации.
+    cy.setCookie('accessToken', tokens.accessToken);
+  }
+  cy.viewport(1300, 800);
+  cy.visit('/');
+});
+
+Cypress.Commands.add(
+  'clickContainerButton',
+  (wrapperSelector: string, buttonSelector?: string) => {
+    return cy
+      .get(`[data-cy=${wrapperSelector}]`)
+      .find(buttonSelector ? `[data-cy=${buttonSelector}]` : `[type=button]`)
+      .first()
+      .click();
+  }
+);
+
+Cypress.Commands.add(
+  'addIngredients',
+  (
+    wrapperSelector: string,
+    ingredientSelector: string,
+    callback?: (item: JQuery<HTMLElement>) => void
+  ) => {
+    cy.get(`[data-cy=${wrapperSelector}]`).each(($el) => {
+      cy.wrap($el)
+        .contains('Добавить')
+        .click()
+        .then((clickedBtn) => {
+          callback?.(clickedBtn.parent(`[data-cy=${ingredientSelector}]`));
+        });
+    });
+  }
+);
