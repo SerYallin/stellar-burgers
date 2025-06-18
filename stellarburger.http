@@ -1,0 +1,9 @@
+### GET request to example server
+POST https://norma.nomoreparties.space/api/orders
+Content-Type: application/json;charset=utf-8
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NDgwNTUxYzJmMzBjMDAxY2IyYjUzZSIsImlhdCI6MTc0OTcyMzk5NCwiZXhwIjoxNzQ5NzI1MTk0fQ.ab4ayWr9E3X29pL4ElXdfj6GXU4HeZUg1_7XQp1hwwo
+
+{
+  "ingredients": ["643d69a5c3f7b9001cfa093d","643d69a5c3f7b9001cfa093e","643d69a5c3f7b9001cfa0943"]
+}
+###
